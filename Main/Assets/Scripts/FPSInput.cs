@@ -2,47 +2,48 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterController))] // enforces dependency on character controller
-[AddComponentMenu("Control Script/FPS Input")]  // add to the Unity editor's component menu
+[RequireComponent(typeof(CharacterController))]
+[AddComponentMenu("Control Script/FPS Input")]
 public class FPSInput : MonoBehaviour
 {
-    // movement sensitivity
     public float speed = 6.0f;
+    public float runSpeed = 12.0f;
+    public bool canMove = true;
 
-    // gravity setting
-    public float gravity = -9.8f;
-
-    // reference to the character controller
+    // Reference to the character controller
     private CharacterController charController;
 
-    // Start is called before the first frame update
     void Start()
     {
-        // get the character controller component
+        // Get the character controller component
         charController = GetComponent<CharacterController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // changes based on WASD keys
-        float deltaX = Input.GetAxis("Horizontal") * speed;
-        float deltaZ = Input.GetAxis("Vertical") * speed;
+        bool isRunning = Input.GetKey(KeyCode.LeftShift);
+        float moveSpeed = canMove ? (isRunning ? runSpeed : speed) : 0;
+
+        float deltaZ = moveSpeed * Input.GetAxis("Vertical");
+        float deltaX = moveSpeed * Input.GetAxis("Horizontal");
         Vector3 movement = new Vector3(deltaX, 0, deltaZ);
 
-        // make diagonal movement consistent
-        movement = Vector3.ClampMagnitude(movement, speed);
+        // Add gravity to simulate realistic vertical movement
+        movement.y = Physics.gravity.y * Time.deltaTime;
 
-        // add gravity in the vertical direction
-        movement.y = gravity;
-
-        // ensure movement is independent of the framerate
+        // Ensure movement is independent of the framerate
         movement *= Time.deltaTime;
 
-        // transform from local space to global space
+        // Transform from local space to global space
         movement = transform.TransformDirection(movement);
 
-        // pass the movement to the character controller
+        // Pass the movement to the character controller
         charController.Move(movement);
     }
 }
+
+
+
+
+
+
