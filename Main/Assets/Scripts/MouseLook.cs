@@ -24,6 +24,8 @@ public class MouseLook : MonoBehaviour
             Debug.LogError("Camera not found as a child of the player object.");
         }
 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
