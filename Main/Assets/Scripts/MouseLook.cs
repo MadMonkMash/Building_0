@@ -18,7 +18,7 @@ public class MouseLook : MonoBehaviour
     void Start()
     {
         // Find the camera in the hierarchy
-        cameraTransform = transform.Find("Main Camera");
+        cameraTransform = GameObject.Find("Main Camera").transform;
         if (cameraTransform == null)
         {
             Debug.LogError("Camera not found as a child of the player object.");
