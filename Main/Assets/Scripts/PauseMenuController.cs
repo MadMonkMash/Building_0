@@ -14,11 +14,13 @@ public class PauseMenuController : MonoBehaviour
 
     public bool isPaused = false;
 
+    // Check if game is paused
     public bool getIsPaused()
     {
         return isPaused;
     }
 
+    // Method to resume game and disable pause menu
     public void HidePauseMenu()
     {
         pauseCanvasGroup.alpha = 0;
@@ -33,6 +35,7 @@ public class PauseMenuController : MonoBehaviour
         isPaused = false;
     }
 
+    // Method to pause game and display pause menu
     public void DisplayPauseMenu()
     {
         pauseCanvasGroup.alpha = 1;
@@ -47,11 +50,13 @@ public class PauseMenuController : MonoBehaviour
         isPaused = true;
     }
 
+    // Resume button function
     public void OnResumeButton()
     {
         HidePauseMenu();
     }
 
+    // Load to title screen scene
     public void OnExitButton()
     {
         SceneManager.LoadScene(0);
