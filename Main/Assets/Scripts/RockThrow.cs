@@ -14,9 +14,9 @@ public class RockThrow : MonoBehaviour {
         cam = GameObject.Find("Main Camera");
     }
 
-    // Update is called once per frame
     void Update()
     {
+        //charge while held
         if (Input.GetMouseButton(0) && grenadeImpulse < MAX_IMPULSE)  grenadeImpulse += 0.01f;
  
         //fire when released
@@ -25,11 +25,14 @@ public class RockThrow : MonoBehaviour {
 
     void fireGrenade()
     {
+        //create prefab in front of camera
         GameObject grenade = Instantiate(grenadePrefab, transform);
         grenade.transform.position = cam.transform.position + cam.transform.forward * 2;
+        //launch 
         Rigidbody target = grenade.GetComponent<Rigidbody>();
         Vector3 impulse = cam.transform.forward * grenadeImpulse;
         target.AddForceAtPosition(impulse, cam.transform.position, ForceMode.Impulse);
-        grenadeImpulse = 10.0f;//reset impulse for next grenade
+        //reset charge impulse for next grenade
+        grenadeImpulse = 10.0f;
     }
 }

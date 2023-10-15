@@ -15,10 +15,14 @@ public class RockScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        //find collision 
         ContactPoint contact = collision.contacts[0];
         Vector3 position = contact.point;
+        //play sound
         AudioSource.PlayClipAtPoint(clip, position, 1);
-        Destroy(gameObject);
+        //remove rock and cause monster to path
         m.startDistraction(this.position);
+        Destroy(gameObject);
+        
     }
 }
