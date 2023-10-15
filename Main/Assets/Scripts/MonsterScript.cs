@@ -91,7 +91,12 @@ public class MonsterScript : MonoBehaviour
         }
     }
 
-    public IEnumerator Distraction(Vector3 position)
+    public void startDistraction(Vector3 p)
+    {
+        StartCoroutine(Distraction(p));
+    }
+
+    IEnumerator Distraction(Vector3 position)
     {
         isChasing = true;
         navAgent.SetDestination(position);
