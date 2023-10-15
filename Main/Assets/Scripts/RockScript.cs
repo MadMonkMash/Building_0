@@ -21,7 +21,7 @@ public class RockScript : MonoBehaviour
         //play sound
         AudioSource.PlayClipAtPoint(clip, position, 1);
         //remove rock and cause monster to path
-        m.startDistraction(this.position);
+        m.startDistraction(position);
         Destroy(gameObject);
         
     }
