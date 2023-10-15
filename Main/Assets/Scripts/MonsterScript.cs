@@ -14,6 +14,7 @@ public class MonsterScript : MonoBehaviour
     private bool isChasing = false;
     private Coroutine roamingCoroutine; // Store the reference to the roaming
 
+
     void Start()
     {
         navAgent = GetComponent<NavMeshAgent>();
@@ -88,5 +89,20 @@ public class MonsterScript : MonoBehaviour
             }
             while (navAgent.pathPending || remainingDistance > navAgent.stoppingDistance);
         }
+    }
+
+    public IEnumerator Distraction(Vector3 position)
+    {
+        isChasing = true;
+        navAgent.SetDestination(position);
+        // Wait till we reach the distracted destination before roaming
+        float remainingDistance;
+        do
+        {
+            remainingDistance = navAgent.remainingDistance;
+            yield return null;
+        }
+        while (navAgent.pathPending || remainingDistance > navAgent.stoppingDistance);
+        StartCoroutine(RoamRandomly());
     }
 }
