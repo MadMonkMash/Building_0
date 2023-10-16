@@ -14,7 +14,7 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 9
-  m_Fog: 1
+  m_Fog: 0
   m_FogColor: {r: 0, g: 0, b: 0, a: 1}
   m_FogMode: 3
   m_FogDensity: 0.1
@@ -1356,6 +1356,7 @@ GameObject:
   - component: {fileID: 478138241}
   - component: {fileID: 478138242}
   - component: {fileID: 478138243}
+  - component: {fileID: 478138244}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1434,9 +1435,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf83f35846928848be7bc2b22274d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crouchSpeed: 3
   walkSpeed: 6
   sprintSpeed: 12
   canMove: 1
+  crouchHeight: 0.5
+  crouchCameraOffset: -0.5
+  crouchTransitionSpeed: 10
   maxStamina: 100
   staminaDrainRate: 100
   staminaRechargeRate: 20
@@ -1452,6 +1457,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9a5b3b2e1d981fb48b972b9e43884903, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &478138244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 478138237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf00424463e0dc84c9c8c0cc3171f0ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  grenadeImpulse: 10
+  grenadePrefab: {fileID: 692940183973453228, guid: d45ad7ce46d16834290517a18f3c4976, type: 3}
+  cam: {fileID: 0}
 --- !u!1 &503309896
 GameObject:
   m_ObjectHideFlags: 0

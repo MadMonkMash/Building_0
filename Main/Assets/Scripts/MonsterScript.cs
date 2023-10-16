@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class MonsterScript : MonoBehaviour
 {
@@ -53,6 +54,11 @@ public class MonsterScript : MonoBehaviour
                     StopCoroutine(roamingCoroutine);
                 }
                 navAgent.SetDestination(playerTransform.position);
+
+                if (isInContactWithPlayer())
+                {
+                    SceneManager.LoadScene(2);
+                }
             }
             else if (isChasing && !isDistracted)
             {
@@ -142,5 +148,22 @@ public class MonsterScript : MonoBehaviour
 
         // Adjust the angle range (e.g., 90 degrees) to fit your desired field of view
         return angleToPlayer <= 90f;
+    }
+
+    bool isInContactWithPlayer()
+    {
+        Collider monsterCollider = GetComponent<Collider>();
+
+        if(monsterCollider != null)
+        {
+            Collider playerCollider = playerTransform.GetComponent<Collider>();
+
+            if (playerCollider != null)
+            {
+                return monsterCollider.bounds.Intersects(playerCollider.bounds);
+            }
+        }
+
+        return false;
     }
 }
