@@ -9,6 +9,7 @@ public class GateEvent : MonoBehaviour
     public Vector3 target = new Vector3(0f, 14.3f, 0f);
     private bool isOpen = false;
     public GameObject gate;
+    public AudioSource gateAudioSource;
     // Start is called before the first frame update
     void Start()
     {
@@ -24,6 +25,11 @@ public class GateEvent : MonoBehaviour
             // move the gate towards the target position and set isOpen
             StartCoroutine(SlideGate(target));
             isOpen = true;
+
+            if (gateAudioSource != null)
+            {
+                gateAudioSource.Play();
+            }
         }
     }
     // Slides gate to position when called
