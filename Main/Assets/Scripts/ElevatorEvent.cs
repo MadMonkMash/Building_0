@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ElevatorEvent : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class ElevatorEvent : MonoBehaviour
     {
         if (!isOpen)
         {
-            Destroy(gameObject);
+            SceneManager.LoadScene(3);
         }
     }
 

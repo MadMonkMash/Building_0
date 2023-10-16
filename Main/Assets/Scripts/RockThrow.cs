@@ -18,10 +18,10 @@ public class RockThrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0) && grenadeImpulse < MAX_IMPULSE) grenadeImpulse += 0.01f;
+        if (Input.GetMouseButton(1) && grenadeImpulse < MAX_IMPULSE) grenadeImpulse += 0.01f;
 
         //fire when released
-        if (Input.GetMouseButtonUp(0)) fireGrenade();
+        if (Input.GetMouseButtonUp(1)) fireGrenade();
     }
 
     void fireGrenade()

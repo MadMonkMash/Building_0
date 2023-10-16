@@ -13,11 +13,14 @@ public class FPSInput : MonoBehaviour
     public float sprintSpeed = 12.0f;
     public bool canMove = true;
 
+    private CharacterController charController; // Reference to the character controller
     private GameObject cam;
-    private float originalHeight;
+
     public float crouchHeight = 0.5f;
     public float crouchCameraOffset = -0.5f;
     public float crouchTransitionSpeed = 10f;
+
+    private float originalHeight;
     private Vector3 cameraStandPosition;
     private Vector3 cameraCrouchPosition;
 
@@ -25,11 +28,7 @@ public class FPSInput : MonoBehaviour
     public float staminaDrainRate = 100.0f;
     public float staminaRechargeRate = 20.0f;
 
-    // Reference to the character controller
-    private CharacterController charController;
-
     private float currentStamina;
-
     private StaminaUI staminaUI;
 
     void Start()
@@ -62,68 +61,55 @@ public class FPSInput : MonoBehaviour
         bool isCrouching = Input.GetKey(KeyCode.C);
         float moveSpeed;
 
-        if (isSprinting && !isCrouching) //cannot sprint while crouched
+        if (isSprinting && !isCrouching)
         {
-
-            // Set player speed to sprinting speed
             moveSpeed = sprintSpeed;
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, cameraStandPosition, crouchTransitionSpeed * Time.deltaTime);
-            // Drain stamina while sprinting
             currentStamina -= staminaDrainRate * Time.deltaTime;
-
-            // Update stamina UI to drain bar
             staminaUI.UpdateStamina(currentStamina, maxStamina, 1);
 
             if (currentStamina < 0)
             {
-
-                // Force player to walk when stamina is depleted
                 moveSpeed = walkSpeed;
                 currentStamina = 0;
-
                 Debug.Log("Stamina empty");
             }
-        }else if (isCrouching)
+        }
+        else if (isCrouching)
         {
             charController.height = crouchHeight;
             moveSpeed = crouchSpeed;
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, cameraCrouchPosition, crouchTransitionSpeed * Time.deltaTime);
         }
         else
-        { //regular walking
-
-            // Set player speed to walking speed
+        {
             moveSpeed = walkSpeed;
             cam.transform.localPosition = Vector3.Lerp(cam.transform.localPosition, cameraStandPosition, crouchTransitionSpeed * Time.deltaTime);
-
-            // Regain stamina while not sprinting
             currentStamina += staminaRechargeRate * Time.deltaTime;
-
-            // Update stamina UI to restore bar
             staminaUI.UpdateStamina(currentStamina, maxStamina, 1);
         }
 
         float deltaZ = moveSpeed * Input.GetAxis("Vertical");
         float deltaX = moveSpeed * Input.GetAxis("Horizontal");
-        Vector3 movement = new Vector3(deltaX, 0, deltaZ);
 
-        // Add gravity to simulate realistic vertical movement
-        movement.y = Physics.gravity.y * Time.deltaTime;
+        Vector3 movement = transform.forward * deltaZ + transform.right * deltaX;
+        movement.y = 0;
 
-        // Ensure movement is independent of the framerate
+        // Apply gravity
+        /*
+        if (!charController.isGrounded)
+        {
+            movement.y = Physics.gravity.y;
+        }
+        */
+
         movement *= Time.deltaTime;
 
-        // Transform from local space to global space
-        movement = transform.TransformDirection(movement);
-
-        // Pass the movement to the character controller
         charController.Move(movement);
 
-        // Ensure constraints on stamina range
         currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
 
-        // Hide stamina UI when stamina is max
-        if(currentStamina == maxStamina)
+        if (currentStamina == maxStamina)
         {
             staminaUI.UpdateStamina(currentStamina, maxStamina, 0);
         }
