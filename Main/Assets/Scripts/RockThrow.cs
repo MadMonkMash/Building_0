@@ -8,6 +8,7 @@ public class RockThrow : MonoBehaviour {
     static float MAX_IMPULSE = 30.0f;
     public GameObject grenadePrefab;
     public GameObject cam;
+    public bool hasRock = false;
 
     void Start ()
     {
@@ -23,16 +24,25 @@ public class RockThrow : MonoBehaviour {
         if (Input.GetMouseButtonUp(0)) fireGrenade();
     }
 
+    public void setRock()
+    {
+        hasRock = true;
+    }
+
     void fireGrenade()
     {
-        //create prefab in front of camera
-        GameObject grenade = Instantiate(grenadePrefab, transform);
-        grenade.transform.position = cam.transform.position + cam.transform.forward * 2;
-        //launch 
-        Rigidbody target = grenade.GetComponent<Rigidbody>();
-        Vector3 impulse = cam.transform.forward * grenadeImpulse;
-        target.AddForceAtPosition(impulse, cam.transform.position, ForceMode.Impulse);
-        //reset charge impulse for next grenade
-        grenadeImpulse = 10.0f;
+        if (hasRock)
+        {
+            //create prefab in front of camera
+            GameObject grenade = Instantiate(grenadePrefab, transform);
+            grenade.transform.position = cam.transform.position + cam.transform.forward * 2;
+            //launch 
+            Rigidbody target = grenade.GetComponent<Rigidbody>();
+            Vector3 impulse = cam.transform.forward * grenadeImpulse;
+            target.AddForceAtPosition(impulse, cam.transform.position, ForceMode.Impulse);
+            //reset charge impulse for next grenade
+            grenadeImpulse = 10.0f;
+            hasRock = false;
+        }
     }
 }
