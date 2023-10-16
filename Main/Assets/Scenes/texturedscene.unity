@@ -173,7 +173,7 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
@@ -1499,6 +1499,7 @@ GameObject:
   - component: {fileID: 478138239}
   - component: {fileID: 478138241}
   - component: {fileID: 478138242}
+  - component: {fileID: 478138243}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1577,9 +1578,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf83f35846928848be7bc2b22274d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  crouchSpeed: 3
   walkSpeed: 6
   sprintSpeed: 12
   canMove: 1
+  crouchHeight: 0.5
+  crouchCameraOffset: -0.5
+  crouchTransitionSpeed: 10
   maxStamina: 100
   staminaDrainRate: 100
   staminaRechargeRate: 20
@@ -3062,7 +3067,7 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
@@ -4838,7 +4843,7 @@ BoxCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
@@ -5038,7 +5043,7 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0
@@ -7563,7 +7568,7 @@ MeshCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
-  m_ProvidesContacts: 0
+  m_ProvidesContacts: 1
   m_Enabled: 1
   serializedVersion: 5
   m_Convex: 0

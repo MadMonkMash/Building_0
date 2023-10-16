@@ -1,18 +1,19 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class MonsterScript : MonoBehaviour
 {
     public float roamRadius = 10f;
-    public float sightDistance = 20f; //Sets how far away the monster can see you
-    public LayerMask raycastLayers; //Must be set to everything in the component
+    public float sightDistance = 20f;
+    public LayerMask raycastLayers;
 
     private NavMeshAgent navAgent;
-    private Transform playerTransform; // Reference to the player's transform component
-
+    private Transform playerTransform;
+    private Coroutine roamingCoroutine;
     private bool isChasing = false;
-    private Coroutine roamingCoroutine; // Store the reference to the roaming
+    private bool isDistracted = false;
 
     void Start()
     {
@@ -23,7 +24,6 @@ public class MonsterScript : MonoBehaviour
             return;
         }
 
-        // Try to find the player's transform when the game starts
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -37,26 +37,30 @@ public class MonsterScript : MonoBehaviour
     {
         if (playerTransform == null) return;
 
-        // Raycasting towards the player
         Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
         RaycastHit hit;
 
-        // Debug ray to visualize the monster's sight
         Debug.DrawRay(transform.position, directionToPlayer * sightDistance, Color.red);
 
-        if (Physics.Raycast(transform.position, directionToPlayer, out hit, sightDistance, raycastLayers))
+        if (Physics.Raycast(transform.position, directionToPlayer, out hit, sightDistance, raycastLayers) && IsPlayerWithinFieldOfView())
         {
             if (hit.collider.CompareTag("Player"))
             {
                 Debug.Log("Player spotted!");
                 isChasing = true;
+                isDistracted = false;
                 if (roamingCoroutine != null)
                 {
-                    StopCoroutine(roamingCoroutine); // Stop the roaming
+                    StopCoroutine(roamingCoroutine);
                 }
                 navAgent.SetDestination(playerTransform.position);
+
+                if (isInContactWithPlayer())
+                {
+                    SceneManager.LoadScene(2);
+                }
             }
-            else if (isChasing)
+            else if (isChasing && !isDistracted)
             {
                 Debug.Log("Player lost!");
                 isChasing = false;
@@ -79,7 +83,6 @@ public class MonsterScript : MonoBehaviour
                 navAgent.SetDestination(finalPosition);
             }
 
-            // Wait till we reach the current destination before picking another.
             float remainingDistance;
             do
             {
@@ -88,5 +91,79 @@ public class MonsterScript : MonoBehaviour
             }
             while (navAgent.pathPending || remainingDistance > navAgent.stoppingDistance);
         }
+    }
+
+    public IEnumerator Distraction(Vector3 position)
+    {
+        Debug.Log("Monster has been notified, target position: " + position);
+        isDistracted = true;
+        navAgent.SetDestination(position);
+        Debug.Log("Monster destination set: " + navAgent.destination);
+
+        float remainingDistance;
+        do
+        {
+            remainingDistance = navAgent.remainingDistance;
+            if (PlayerInSight())
+            {
+                Debug.Log("Player spotted during distraction, initiating chase.");
+                isDistracted = false;
+                isChasing = true;
+                navAgent.SetDestination(playerTransform.position);
+                yield break;
+            }
+            yield return null;
+        }
+        while (navAgent.pathPending || remainingDistance > navAgent.stoppingDistance);
+
+        Debug.Log("Monster reached distraction point, resuming roaming.");
+        isDistracted = false;
+        StartCoroutine(RoamRandomly());
+    }
+
+    public void startDistraction(Vector3 p)
+    {
+        StartCoroutine(Distraction(p));
+    }
+
+    bool PlayerInSight()
+    {
+        if (playerTransform == null || !IsPlayerWithinFieldOfView()) return false;
+
+        Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        RaycastHit hit;
+
+        if (Physics.Raycast(transform.position, directionToPlayer, out hit, sightDistance, raycastLayers))
+        {
+            return hit.collider.CompareTag("Player");
+        }
+
+        return false;
+    }
+
+    bool IsPlayerWithinFieldOfView()
+    {
+        Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
+
+        // Adjust the angle range (e.g., 90 degrees) to fit your desired field of view
+        return angleToPlayer <= 90f;
+    }
+
+    bool isInContactWithPlayer()
+    {
+        Collider monsterCollider = GetComponent<Collider>();
+
+        if(monsterCollider != null)
+        {
+            Collider playerCollider = playerTransform.GetComponent<Collider>();
+
+            if (playerCollider != null)
+            {
+                return monsterCollider.bounds.Intersects(playerCollider.bounds);
+            }
+        }
+
+        return false;
     }
 }

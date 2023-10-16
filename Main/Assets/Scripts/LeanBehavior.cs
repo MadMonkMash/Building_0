@@ -11,13 +11,11 @@ public class LeanBehaviour : MonoBehaviour
 
     float curAngle = 0f;
 
-    // Use this for initialization
     void Awake()
     {
         if (_Pivot == null && transform.parent != null) _Pivot = transform.parent;
     }
 
-    // Update is called once per frame
     void Update()
     {
         // lean left
@@ -35,7 +33,7 @@ public class LeanBehaviour : MonoBehaviour
         {
             curAngle = Mathf.MoveTowardsAngle(curAngle, 0f, speed * Time.deltaTime);
         }
-
+        //move camera along pivot 
         _Pivot.transform.localRotation = Quaternion.AngleAxis(curAngle, Vector3.forward);
     }
 

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Antlr3.Runtime;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [AddComponentMenu("Control Script/Mouse Look")]
@@ -30,6 +32,13 @@ public class MouseLook : MonoBehaviour
 
     void Update()
     {
+
+        // If paused, do not update camera movement
+        if (Time.timeScale == 0)
+        {
+            return;
+        }
+
         // Change in pitch
         verticalRot -= Input.GetAxis("Mouse Y") * sensitivityVert;
         verticalRot = Mathf.Clamp(verticalRot, minimumVert, maximumVert);
